@@ -184,33 +184,33 @@
 #define INT_CFG_IRQ_TYPE                        (0x00000001UL)    // R/W Not Affected by SW Reset
 #define INT_CFG_IRQ_RESERVED                    (0x00FFCEEEUL)    //Reserved bits mask
 
-#define INT_STS_SW_INT                          (0x80000000UL)    // R/WC
-#define INT_STS_TXSTOP_INT                      (0x02000000UL)    // R/WC
-#define INT_STS_RXSTOP_INT                      (0x01000000UL)    // R/WC
-#define INT_STS_RXDFH_INT                       (0x00800000UL)    // R/WC
-#define INT_STS_RXDF_INT                        (0x00400000UL)    // R/WC
-#define INT_STS_TX_IOC                          (0x00200000UL)    // R/WC
-#define INT_STS_RXD_INT                         (0x00100000UL)    // R/WC
-#define INT_STS_GPT_INT                         (0x00080000UL)    // R/WC
-#define INT_STS_PHY_INT                         (0x00040000UL)    // RO
-#define INT_STS_PME_INT                         (0x00020000UL)    // R/WC
-#define INT_STS_TXSO                            (0x00010000UL)    // R/WC
-#define INT_STS_RWT                             (0x00008000UL)    // R/WC
-#define INT_STS_RXE                             (0x00004000UL)    // R/WC
-#define INT_STS_TXE                             (0x00002000UL)    // R/WC
-#define INT_STS_ERX                             (0x00001000UL)    // R/WC
-#define INT_STS_TDFU                            (0x00000800UL)    // R/WC
-#define INT_STS_TDFO                            (0x00000400UL)    // R/WC
-#define INT_STS_TDFA                            (0x00000200UL)    // R/WC
-#define INT_STS_TSFF                            (0x00000100UL)    // R/WC
-#define INT_STS_TSFL                            (0x00000080UL)    // R/WC
-#define INT_STS_RDFO                            (0x00000040UL)    // R/WC
-#define INT_STS_RDFL                            (0x00000020UL)    // R/WC
-#define INT_STS_RSFF                            (0x00000010UL)    // R/WC
-#define INT_STS_RSFL                            (0x00000008UL)    // R/WC
-#define INT_STS_GPIO2_INT                       (0x00000004UL)    // R/WC
-#define INT_STS_GPIO1_INT                       (0x00000002UL)    // R/WC
-#define INT_STS_GPIO0_INT                       (0x00000001UL)    // R/WC
+#define INT_STS_SW_INT                          (0x80000000UL)    // R/WC (bit 32)
+#define INT_STS_TXSTOP_INT                      (0x02000000UL)    // R/WC (bit 25)
+#define INT_STS_RXSTOP_INT                      (0x01000000UL)    // R/WC (bit 24)
+#define INT_STS_RXDFH_INT                       (0x00800000UL)    // R/WC (bit 23)
+#define INT_STS_RXDF_INT                        (0x00400000UL)    // R/WC (bit 22) 
+#define INT_STS_TX_IOC                          (0x00200000UL)    // R/WC (bit 21)
+#define INT_STS_RXD_INT                         (0x00100000UL)    // R/WC (bit 20)
+#define INT_STS_GPT_INT                         (0x00080000UL)    // R/WC (bit 19)
+#define INT_STS_PHY_INT                         (0x00040000UL)    // RO   (bit 18)
+#define INT_STS_PME_INT                         (0x00020000UL)    // R/WC (bit 17)
+#define INT_STS_TXSO                            (0x00010000UL)    // R/WC (bit 16)
+#define INT_STS_RWT                             (0x00008000UL)    // R/WC (bit 15)
+#define INT_STS_RXE                             (0x00004000UL)    // R/WC (bit 14)
+#define INT_STS_TXE                             (0x00002000UL)    // R/WC (bit 13)
+#define INT_STS_ERX                             (0x00001000UL)    // R/WC (bit 12)
+#define INT_STS_TDFU                            (0x00000800UL)    // R/WC (bit 11)
+#define INT_STS_TDFO                            (0x00000400UL)    // R/WC (bit 10)
+#define INT_STS_TDFA                            (0x00000200UL)    // R/WC (bit 9)
+#define INT_STS_TSFF                            (0x00000100UL)    // R/WC (bit 8)
+#define INT_STS_TSFL                            (0x00000080UL)    // R/WC (bit 7)
+#define INT_STS_RDFO                            (0x00000040UL)    // R/WC (bit 6)
+#define INT_STS_RDFL                            (0x00000020UL)    // R/WC (bit 5)
+#define INT_STS_RSFF                            (0x00000010UL)    // R/WC (bit 4)
+#define INT_STS_RSFL                            (0x00000008UL)    // R/WC (bit 3)
+#define INT_STS_GPIO2_INT                       (0x00000004UL)    // R/WC (bit 2)
+#define INT_STS_GPIO1_INT                       (0x00000002UL)    // R/WC (bit 1)
+#define INT_STS_GPIO0_INT                       (0x00000001UL)    // R/WC (bit 0)
 
 #define INT_EN_SW_INT_EN                        (0x80000000UL)    // R/W
 #define INT_EN_TXSTOP_INT_EN                    (0x02000000UL)    // R/W
@@ -1001,6 +1001,7 @@ static  void  LAN911x_Init (NET_IF   *pif,
     reg_val  =  LAN91_INT_CFG;                                  /* Read the Interrupt Configuration Register            */
     reg_val |= (1 << 24)        |                               /* Deassert IRQ for 1*10us for edge type interrupts     */
                 INT_CFG_IRQ_EN  |                               /* Set master interrupt enable bit                      */
+		INT_CFG_IRQ_POL |
                 INT_CFG_IRQ_TYPE;                               /* Set IRQ pin push-pull driver                         */
     LAN91_INT_CFG = reg_val;                                    /* Write the new interrupt configuration value          */
 
